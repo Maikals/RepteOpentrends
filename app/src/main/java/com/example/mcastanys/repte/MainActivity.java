@@ -1,18 +1,45 @@
 package com.example.mcastanys.repte;
 
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.example.mcastanys.repte.adapter.PageAdapter;
+import com.viewpagerindicator.CirclePageIndicator;
 
 
 public class MainActivity extends ActionBarActivity {
+    ViewPager mPager;
+    PageAdapter mPageAdapter;
+    CirclePageIndicator mIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPager = (ViewPager) findViewById(R.id.vp_parent);
+        mPageAdapter = new PageAdapter(getSupportFragmentManager());
+        if(mPager == null) {
+            Log.d("MainActivity", "adaptador null");
+        }
+        else {
+            Log.d("MainActivity", "adaptador no null");
+        }
+        mPager.setAdapter(mPageAdapter);
+        mPager.setOffscreenPageLimit(mPageAdapter.getCount());
+        mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+        mIndicator.setViewPager(mPager);
+        mIndicator.setOnPageChangeListener(pageListener);
         setContentView(R.layout.activity_main);
     }
+
+    ViewPager.SimpleOnPageChangeListener pageListener = new ViewPager.SimpleOnPageChangeListener() {};
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
