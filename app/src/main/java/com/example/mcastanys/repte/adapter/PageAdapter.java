@@ -20,6 +20,14 @@ public class PageAdapter extends FragmentStatePagerAdapter {
         fragments.add(BaseFragment.newInstance("2"));
     }
 
+    public void addFragment() {
+        fragments.add(BaseFragment.newInstance((Integer.toString(getCount()+1))));
+    }
+
+    public void removeFragment() {
+        fragments.remove(fragments.size() - 1);
+    }
+
     @Override
     public Fragment getItem(int position) {
         if(position < getCount()) {
