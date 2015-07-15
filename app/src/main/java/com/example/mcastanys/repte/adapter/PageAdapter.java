@@ -12,15 +12,19 @@ import java.util.ArrayList;
  * Created by mcastanys on 14/07/15.
  */
 public class PageAdapter extends FragmentStatePagerAdapter {
-    ArrayList<BaseFragment> fragments;
+    ArrayList<Fragment> fragments;
     public PageAdapter(FragmentManager fm) {
         super(fm);
         fragments = new ArrayList<>();
         fragments.add(BaseFragment.newInstance("1"));
+        fragments.add(BaseFragment.newInstance("2"));
     }
 
     @Override
     public Fragment getItem(int position) {
+        if(position < getCount()) {
+            return fragments.get(position);
+        }
         return null;
     }
 
