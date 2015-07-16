@@ -13,4 +13,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_fragment">Add Fragment</string>
     <string name="remove_fragment">Remove Fragment</string>
+    <string name="drawer_open">open drawer</string>
+    <string name="drawer_close">close drawer</string>
 </resources>

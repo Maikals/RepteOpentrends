@@ -1,77 +1,89 @@
 package com.example.mcastanys.repte;
 
-import android.app.FragmentManager;
-import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+
+
+import android.support.v7.app.ActionBar;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
+
+import com.example.mcastanys.repte.adapter.DrawerListAdapter;
 import com.example.mcastanys.repte.adapter.PageAdapter;
-import com.example.mcastanys.repte.fragment.PlanetFragment;
 import com.viewpagerindicator.CirclePageIndicator;
+import com.example.mcastanys.repte.fragment.PreferenceFragment;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
     ViewPager mPager;
     PageAdapter mPageAdapter;
     CirclePageIndicator mIndicator;
-    CharSequence mTitle;
-
-    private String[] mPlanetTitles;
+    private final static String TAG = MainActivity.class.getSimpleName();
+    private RelativeLayout mDrawerPane;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+    ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
+    private ActionBar actionBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mNavItems.add(new NavItem("Home", "Meetup destination", R.drawable.ic_action_home));
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mDrawerPane = (RelativeLayout) findViewById(R.id.drawerPane);
+        mDrawerList = (ListView) findViewById(R.id.navList);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
+        DrawerListAdapter adapter = new DrawerListAdapter(this, mNavItems);
+        mDrawerList.setAdapter(adapter);
 
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                getActionBar().setTitle(mTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
 
-            /** Called when a drawer has settled in a completely open state. */
+
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
+            @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle(mDrawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                Log.d(TAG, "onDrawerClosed: " + getTitle());
+
+                invalidateOptionsMenu();
             }
         };
+        // Set the list's click listener
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectItemFromDrawer(position);
+            }
+        });
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         mPager = (ViewPager) findViewById(R.id.vp_parent);
         mPageAdapter = new PageAdapter(getSupportFragmentManager());
         if(mPager == null) {
@@ -85,42 +97,34 @@ public class MainActivity extends AppCompatActivity {
         mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
         mIndicator.setViewPager(mPager);
         mIndicator.setOnPageChangeListener(pageListener);
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
+
+
+
     }
 
     ViewPager.SimpleOnPageChangeListener pageListener = new ViewPager.SimpleOnPageChangeListener() {};
 
 
 
-    private void selectItem(int position) {
-        // Create a new fragment and specify the planet to show based on position
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
 
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
 
-        // Highlight the selected item, update the title, and close the drawer
+
+    private void selectItemFromDrawer(int position) {
+        mPageAdapter.addFragment();
+        mPageAdapter.notifyDataSetChanged();
+
         mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        setTitle(mNavItems.get(position).mTitle);
+
+        // Close the drawer
+        mDrawerLayout.closeDrawer(mDrawerPane);
     }
 
-    @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
-    }
-    public class DrawerItemClickListener implements android.widget.AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
 
 
 
@@ -137,7 +141,9 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_fragment) {
             mPageAdapter.addFragment();
@@ -152,4 +158,13 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
 }
