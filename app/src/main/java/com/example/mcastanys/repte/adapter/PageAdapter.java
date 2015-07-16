@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.example.mcastanys.repte.fragment.BaseFragment;
-import com.example.mcastanys.repte.fragment.PreferenceFragment;
 
 import java.util.ArrayList;
 
