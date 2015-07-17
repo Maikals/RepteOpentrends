@@ -15,4 +15,5 @@
     <string name="remove_fragment">Remove Fragment</string>
     <string name="drawer_open">open drawer</string>
     <string name="drawer_close">close drawer</string>
+    <string name="title_activity_preference">Preference</string>
 </resources>

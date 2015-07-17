@@ -1,7 +1,8 @@
-package com.example.mcastanys.repte;
+package com.example.mcastanys.repte.Activities;
 
 
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +19,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 
+import com.example.mcastanys.repte.NavItem;
+import com.example.mcastanys.repte.R;
 import com.example.mcastanys.repte.adapter.DrawerListAdapter;
 import com.example.mcastanys.repte.adapter.PageAdapter;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -138,14 +141,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void selectItemFromDrawer(int position) {
-        mPageAdapter.addFragment();
         mPageAdapter.notifyDataSetChanged();
 
         mDrawerList.setItemChecked(position, true);
         setTitle(mNavItems.get(position).mTitle);
+        Intent intent = new Intent(this, Preference.class);
 
         // Close the drawer
         mDrawerLayout.closeDrawer(mDrawerPane);
+        startActivity(intent);
     }
 
 
@@ -179,8 +183,8 @@ public class MainActivity extends AppCompatActivity {
                 mPageAdapter.removeFragment();
                 --mNumFragments;
                 mPageAdapter.notifyDataSetChanged();
-                mPager.setOffscreenPageLimit(mNumFragments+1);
-                Log.d(TAG, "num Fragments "+mNumFragments);
+                mPager.setOffscreenPageLimit(mNumFragments + 1);
+                Log.d(TAG, "num Fragments " + mNumFragments);
             }
             return true;
         }
