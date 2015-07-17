@@ -36,11 +36,22 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     ArrayList<NavItem> mNavItems = new ArrayList<NavItem>();
     private ActionBar actionBar;
-
+    private final static String NUM_FRAGMENTS = "fragments";
+    private int mNumFragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            mNumFragments = savedInstanceState.getInt(NUM_FRAGMENTS);
+        } else {
+            mNumFragments = 0;
+        }
+
+
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,13 +97,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         mPager = (ViewPager) findViewById(R.id.vp_parent);
-        mPageAdapter = new PageAdapter(getSupportFragmentManager());
-        if(mPager == null) {
+        if(mPageAdapter == null) {
             Log.d("MainActivity", "adaptador null");
         }
         else {
             Log.d("MainActivity", "adaptador no null");
         }
+
+        mPageAdapter = new PageAdapter(getSupportFragmentManager());
+
         mPager.setAdapter(mPageAdapter);
         mPager.setOffscreenPageLimit(mPageAdapter.getCount());
         mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
@@ -103,15 +116,24 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
 
-
+        for (int i = 0; i < mNumFragments; ++i) {
+            mPageAdapter.addFragment();
+        }
+        mPageAdapter.notifyDataSetChanged();
 
 
     }
 
     ViewPager.SimpleOnPageChangeListener pageListener = new ViewPager.SimpleOnPageChangeListener() {};
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putInt(NUM_FRAGMENTS, mNumFragments);
 
-
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
 
 
@@ -148,12 +170,18 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_fragment) {
             mPageAdapter.addFragment();
+            ++mNumFragments;
             mPageAdapter.notifyDataSetChanged();
             return true;
         }
         else if (id == R.id.remove_fragment) {
-            mPageAdapter.removeFragment();
-            mPageAdapter.notifyDataSetChanged();
+            if (mNumFragments > 0){
+                mPageAdapter.removeFragment();
+                --mNumFragments;
+                mPageAdapter.notifyDataSetChanged();
+                mPager.setOffscreenPageLimit(mNumFragments+1);
+                Log.d(TAG, "num Fragments "+mNumFragments);
+            }
             return true;
         }
 

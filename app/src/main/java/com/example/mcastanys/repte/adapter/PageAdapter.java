@@ -17,7 +17,6 @@ public class PageAdapter extends FragmentStatePagerAdapter {
         super(fm);
         fragments = new ArrayList<>();
         fragments.add(BaseFragment.newInstance("1"));
-        fragments.add(BaseFragment.newInstance("2"));
     }
 
     public void addFragment() {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mcastanys.repte.Constants;
 import com.example.mcastanys.repte.R;
 
 /**
@@ -65,6 +66,8 @@ public class BaseFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fragment, container, false);
         textView = (TextView) view.findViewById(R.id.fragment_text);
         textView.setText(MESSAGE+mParam1);
+        textView = (TextView) view.findViewById(R.id.imageDescription);
+        textView.setText(Constants.MUFFIN);
         return view;
     }
 

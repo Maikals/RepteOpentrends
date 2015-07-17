@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.mcastanys.repte.fragment.fragment"
+    android:orientation="vertical">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:id="@+id/fragment_text"
+        android:text="@string/hello_blank_fragment"
+        android:gravity="center_vertical|center_horizontal|top"
+        android:layout_gravity="center_horizontal"
+        android:typeface="sans"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="250dip"
+            android:layout_height="250dip"
+            android:id="@+id/fragmentImage"
+            android:layout_marginLeft="26dip"
+            android:layout_marginTop="50dip"
+            android:layout_marginRight="26dip"
+            android:layout_marginBottom="26dip"
+            android:maxHeight="80dp"
+            android:maxWidth="80dp"
+            android:minHeight="26dp"
+            android:minWidth="26dp"
+            android:src="@drawable/muffin"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/imageDescription"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+</LinearLayout>
